@@ -1,0 +1,21 @@
+{
+	"name": "totalcms/totalcms",
+	"description": "Total CMS - A modern flat-file content management system",
+	"type": "project",
+	"license": "proprietary",
+	"require": {
+		"php": ">=8.2",
+		"totalcms/cms": "^3.0"
+	},
+	"repositories": [
+		{
+			"type": "composer",
+			"url": "https://packages.totalcms.co"
+		}
+	],
+	"config": {
+		"allow-plugins": {
+			"totalcms/cms": true
+		}
+	}
+}

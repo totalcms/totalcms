@@ -1,0 +1,6 @@
+RewriteEngine On
+
+# Redirect all requests to the tcms front controller
+RewriteCond %{REQUEST_URI} ^/tcms/
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^ tcms/index.php [QSA,L]
