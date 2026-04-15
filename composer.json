@@ -3,7 +3,7 @@
 	"description": "Total CMS - A modern flat-file content management system",
 	"type": "project",
 	"license": "proprietary",
-	"minimum-stability": "beta",
+	"minimum-stability": "dev",
 	"prefer-stable": true,
 	"require": {
 		"php": ">=8.2",
