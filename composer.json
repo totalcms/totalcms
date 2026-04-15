@@ -13,6 +13,22 @@
 		{
 			"type": "composer",
 			"url": "https://packages.totalcms.co"
+		},
+		{
+			"type": "vcs",
+			"url": "https://github.com/joeworkman-forks/couleur.git"
+		},
+		{
+			"type": "vcs",
+			"url": "https://github.com/joeworkman-forks/parsedown-extra"
+		},
+		{
+			"type": "vcs",
+			"url": "https://github.com/joeworkman-forks/parsedown"
+		},
+		{
+			"type": "vcs",
+			"url": "https://github.com/joeworkman-forks/color-thief-php.git"
 		}
 	],
 	"config": {
