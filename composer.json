@@ -7,7 +7,11 @@
 	"prefer-stable": true,
 	"require": {
 		"php": ">=8.2",
-		"totalcms/cms": "^3.0"
+		"totalcms/cms": "^3.0",
+		"erusev/parsedown": "dev-master as 1.8.0",
+		"erusev/parsedown-extra": "dev-master as 1.8.0",
+		"joeworkman-forks/couleur": "dev-main",
+		"ksubileau/color-thief-php": "dev-fix-deprecations as 2.0.3"
 	},
 	"repositories": [
 		{
