@@ -15,10 +15,6 @@
 	},
 	"repositories": [
 		{
-			"type": "composer",
-			"url": "https://packages.totalcms.co"
-		},
-		{
 			"type": "vcs",
 			"url": "https://github.com/joeworkman-forks/couleur.git"
 		},
