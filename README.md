@@ -9,7 +9,33 @@ composer create-project totalcms/totalcms mysite
 cd mysite
 ```
 
-Point your web server's document root to `public/tcms/`, then visit `/admin` to complete setup.
+The installer will prompt you once Composer finishes:
+
+1. **Layout** — `root` (T3 owns the whole domain) or `subpath` (T3 lives at `/tcms/`, leaving `public/` free for your own frontend build). Subpath reorganizes the front controller and rewrite rules automatically.
+2. **Starter pack** (root layout only) — pick `none`, `minimal`, `blog`, `business`, or `portfolio`. Imports a Builder pack with sample pages, layouts, and seed content.
+3. **Frontend asset pipeline** (root layout only) — copies a Vite-based bundle into `frontend/` so you can compile CSS/JS that builder layouts reference. Skip if you're bringing your own asset tooling.
+
+Point your web server's document root to `public/`, then visit `/` (root) or `/tcms/` (subpath) — the setup wizard takes over from there.
+
+### Non-interactive installs
+
+For CI or scripted setups, pre-answer with environment variables:
+
+```bash
+TCMS_LAYOUT=root \
+TCMS_STARTER=blog \
+TCMS_FRONTEND=1 \
+  composer create-project totalcms/totalcms mysite
+```
+
+Defaults: `TCMS_LAYOUT=root`, `TCMS_STARTER=none`, `TCMS_FRONTEND=0`.
+
+The installer self-destructs once it finishes, so to add a starter or the frontend pipeline after the fact, use the CLI directly:
+
+```bash
+vendor/bin/tcms builder:init blog    # install a starter
+vendor/bin/tcms builder:frontend     # install the Vite frontend scaffold
+```
 
 ## Project Structure
 
@@ -18,8 +44,8 @@ mysite/
 ├── config/
 │   └── tcms.php        # Your site configuration
 ├── public/
-│   └── tcms/
-│       └── index.php   # Web entry point
+│   ├── .htaccess       # Front-controller rewrite rules (Apache)
+│   └── index.php       # Web entry point
 ├── vendor/
 │   └── totalcms/cms/   # Total CMS core (installed by Composer)
 ├── tcms-data/          # Content storage (created at runtime)

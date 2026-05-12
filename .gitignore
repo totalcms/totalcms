@@ -3,4 +3,5 @@
 /tmp/
 /logs/
 /tcms-data/
+/frontend/node_modules/
 .DS_Store

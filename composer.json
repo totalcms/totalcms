@@ -35,5 +35,10 @@
 		"allow-plugins": {
 			"totalcms/cms": true
 		}
+	},
+	"scripts": {
+		"post-create-project-cmd": [
+			"@php bin/post-install.php"
+		]
 	}
 }
