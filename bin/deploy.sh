@@ -45,17 +45,35 @@ vendor/bin/tcms deploy
 #
 # CLI OPcache (cleared by `tcms deploy`) and PHP-FPM OPcache are
 # separate. If your stack uses PHP-FPM and OPcache without
-# opcache.validate_timestamps, set the service name below and grant
-# the deploy user NOPASSWD sudo for `systemctl reload <service>`.
+# opcache.validate_timestamps, set the service name below.
 #
 # Common values: "php8.4-fpm" (Debian/Ubuntu), "php-fpm" (RHEL/Fedora).
 # Leave blank to skip — that's the safe default for portable scripts.
+#
+# IMPORTANT — passwordless sudo is required.
+# This script is typically run unattended (webhook, cron, CI runner)
+# with no TTY for an interactive password prompt. Before enabling
+# this step, grant the deploy user NOPASSWD sudo for the exact
+# reload command:
+#
+#   sudo visudo -f /etc/sudoers.d/totalcms-deploy
+#
+# add:
+#   deploy ALL=(root) NOPASSWD: /usr/bin/systemctl reload php8.4-fpm
+#
+# Replace `deploy` with the actual deploy user and the service name
+# with whatever you set PHP_FPM_SERVICE to. Use `which systemctl` to
+# confirm the absolute path on your system.
+#
+# `sudo -n` below means non-interactive: if elevation needs a
+# password, sudo exits immediately with a clear error instead of
+# hanging on a prompt no one is watching.
 # ─────────────────────────────────────────────────────────────────────
 PHP_FPM_SERVICE=""
 
 if [ -n "$PHP_FPM_SERVICE" ]; then
 	echo "→ Reloading $PHP_FPM_SERVICE to flush PHP-FPM OPcache"
-	sudo systemctl reload "$PHP_FPM_SERVICE"
+	sudo -n systemctl reload "$PHP_FPM_SERVICE"
 fi
 
 echo "✓ Deploy complete"
