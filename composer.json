@@ -7,15 +7,8 @@
 	"prefer-stable": true,
 	"require": {
 		"php": ">=8.2",
-		"totalcms/cms": "^3.5",
-		"ksubileau/color-thief-php": "dev-fix-deprecations as 2.0.3"
+		"totalcms/cms": "^3.5"
 	},
-	"repositories": [
-		{
-			"type": "vcs",
-			"url": "https://github.com/joeworkman-forks/color-thief-php.git"
-		}
-	],
 	"config": {
 		"allow-plugins": {
 			"totalcms/cms": true
