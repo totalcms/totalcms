@@ -70,6 +70,18 @@ See the [Configuration Guide](https://docs.totalcms.co/getting-started/configura
 - [Installation Guide](https://docs.totalcms.co/getting-started/installation)
 - [Full Documentation](https://docs.totalcms.co)
 
+## Working with an AI agent
+
+This skeleton ships an [`AGENTS.md`](AGENTS.md) that orients AI coding assistants —
+the stack, project layout, the `tcms` CLI, conventions, and how to connect the
+Total CMS [MCP documentation server](https://mcp.totalcms.co/) so your assistant
+can look up exact Twig functions, field options, and API endpoints on demand.
+
+`AGENTS.md` is read by many tools out of the box, but if yours expects a
+different filename just rename or copy it — for example `CLAUDE.md` (Claude
+Code), `GEMINI.md` (Gemini CLI), or a `.cursor/rules` file (Cursor). The content
+applies regardless of the filename.
+
 ## License
 
 Total CMS is commercial software. See [LICENSE.md](https://github.com/totalcms/cms/blob/master/LICENSE.md) for terms.
