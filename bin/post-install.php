@@ -21,7 +21,7 @@ declare(strict_types=1);
  * If the script fails partway, it leaves itself on disk so the operator can
  * fix the underlying issue and re-run.
  *
- * Prompts the operator for two-and-a-half decisions:
+ * Prompts the operator for a few setup decisions:
  *
  *   1. Layout — "root" (default, T3 owns the docroot) or "subpath"
  *      (T3 lives at /tcms/, leaving public/ free for a static frontend
@@ -37,13 +37,21 @@ declare(strict_types=1);
  *      into the starter command via `--frontend`, or run on its own via
  *      `tcms builder:frontend` when no starter was picked.
  *
+ *   4. Git-managed templates — only offered for root layout. Creates a
+ *      `builder/` folder at the project root, which Total CMS detects as
+ *      "templates are git-managed": they become the committed source of
+ *      truth and the dashboard template editor goes read-only. Created
+ *      BEFORE the starter runs so `builder:init` scaffolds into it; seeded
+ *      with the built-in default layout when no starter is chosen.
+ *
  * Non-interactive runs (CI, --no-interaction, no TTY) fall back to env
  * vars or sensible defaults so this script never blocks unattended
  * installs:
  *
- *   TCMS_LAYOUT   = root | subpath                    (default: root)
- *   TCMS_STARTER  = none | <starter id>               (default: none)
- *   TCMS_FRONTEND = 0 | 1                             (default: 0)
+ *   TCMS_LAYOUT        = root | subpath               (default: root)
+ *   TCMS_STARTER       = none | <starter id>          (default: none)
+ *   TCMS_FRONTEND      = 0 | 1                         (default: 0)
+ *   TCMS_GIT_TEMPLATES = 0 | 1                         (default: 0)
  */
 
 $projectRoot   = dirname(__DIR__);
@@ -92,6 +100,10 @@ $layout = resolveChoice(
 // non-interactive defaults would otherwise self-destruct us into oblivion.
 $didWork = false;
 
+// Whether the operator opted into git-managed templates (root layout only).
+// Hoisted so the closing "Next steps" message can reference it.
+$gitTemplates = '0';
+
 if ($layout === 'subpath') {
 	reorganizeForSubpath($projectRoot);
 	$didWork = true;
@@ -129,9 +141,45 @@ if ($layout === 'root') {
 		choiceMap: ['y' => '1', 'yes' => '1', 'n' => '0', 'no' => '0', '' => '0'],
 	);
 
+	$gitTemplates = resolveChoice(
+		envVar: 'TCMS_GIT_TEMPLATES',
+		allowed: ['0', '1'],
+		default: '0',
+		nonInteractive: $nonInteractive,
+		prompt: <<<'TXT'
+
+			Manage Site Builder templates with git?
+
+			Keeps templates in a `builder/` folder at the project root so you
+			edit them in your IDE and deploy with git — the dashboard template
+			editor becomes read-only. (Default: edit templates in the dashboard,
+			stored under tcms-data/.) See docs: operations/git-first-templates.
+
+			Choice [n]: (y/n)
+			TXT,
+		choiceMap: ['y' => '1', 'yes' => '1', 'n' => '0', 'no' => '0', '' => '0'],
+	);
+
+	// Create ./builder BEFORE scaffolding, so `tcms builder:init` writes the
+	// starter's templates straight into the committed, git-managed location
+	// (Total CMS detects git-managed mode by the folder's presence).
+	$builderDir = $projectRoot . '/builder';
+	if ($gitTemplates === '1' && !is_dir($builderDir)) {
+		mkdir($builderDir, 0755, true);
+		echo "==> Created ./builder — Site Builder templates are git-managed (edit in your IDE, deploy with git).\n";
+		$didWork = true;
+	}
+
 	if ($starter !== 'none' || $frontend === '1') {
 		dispatchBuilderCommands($tcmsBin, $starter, $frontend === '1');
 		$didWork = true;
+	}
+
+	// Git-managed with no starter would leave ./builder empty — and an empty
+	// git-managed builder is locked with nothing to edit. Seed the built-in
+	// default layout so there's a baseline to extend.
+	if ($gitTemplates === '1' && $starter === 'none') {
+		seedBuilderDefaults($cmsPackageDir, $builderDir);
 	}
 }
 
@@ -145,6 +193,10 @@ echo "  1. Point your web server at <project>/public/.\n";
 echo $layout === 'subpath'
 	? "  2. Visit /tcms/ to start the setup wizard.\n"
 	: "  2. Visit / to start the setup wizard.\n";
+if ($gitTemplates === '1') {
+	echo "  3. Commit the ./builder/ folder — your templates are git-managed.\n";
+	echo "     Edit them in your IDE; the dashboard editor is read-only.\n";
+}
 echo "\n";
 
 if ($didWork) {
@@ -378,6 +430,48 @@ function reorganizeForSubpath(string $projectRoot): void
 		rename($src . '/.htaccess', $dst . '/.htaccess');
 		echo "    moved public/.htaccess -> public/tcms/.htaccess\n";
 	}
+}
+
+/**
+ * Seed a freshly-created git-managed ./builder with the built-in default
+ * templates (from the cms package's resources/builder/defaults). Only used
+ * when the operator chose git-managed templates WITHOUT a starter — an empty
+ * ./builder would be git-managed-and-locked with nothing to edit. Existing
+ * files are never overwritten.
+ */
+function seedBuilderDefaults(string $cmsPackageDir, string $builderDir): void
+{
+	$defaults = $cmsPackageDir . '/resources/builder/defaults';
+	if (!is_dir($defaults)) {
+		return;
+	}
+
+	$iterator = new RecursiveIteratorIterator(
+		new RecursiveDirectoryIterator($defaults, FilesystemIterator::SKIP_DOTS),
+		RecursiveIteratorIterator::SELF_FIRST,
+	);
+
+	foreach ($iterator as $item) {
+		if (!$item instanceof SplFileInfo) {
+			continue;
+		}
+
+		$relative = ltrim(substr($item->getPathname(), strlen($defaults)), DIRECTORY_SEPARATOR);
+		$dest     = $builderDir . DIRECTORY_SEPARATOR . $relative;
+
+		if ($item->isDir()) {
+			if (!is_dir($dest)) {
+				mkdir($dest, 0755, true);
+			}
+			continue;
+		}
+
+		if (!file_exists($dest)) {
+			copy($item->getPathname(), $dest);
+		}
+	}
+
+	echo "    seeded ./builder with the built-in default layout\n";
 }
 
 /**
