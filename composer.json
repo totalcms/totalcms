@@ -11,7 +11,8 @@
 	},
 	"config": {
 		"allow-plugins": {
-			"totalcms/cms": true
+			"totalcms/cms": true,
+			"php-http/discovery": true
 		}
 	},
 	"scripts": {
