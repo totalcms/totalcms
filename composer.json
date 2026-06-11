@@ -17,14 +17,7 @@
 	},
 	"scripts": {
 		"post-create-project-cmd": [
-			"@php bin/post-install.php",
-			"@php vendor/bin/tcms skill:install"
-		],
-		"post-install-cmd": [
-			"@php vendor/bin/tcms skill:install"
-		],
-		"post-update-cmd": [
-			"@php vendor/bin/tcms skill:install"
+			"@php bin/post-install.php"
 		]
 	}
 }
