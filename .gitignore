@@ -6,3 +6,7 @@
 /frontend/node_modules/
 .DS_Store
 composer.lock
+
+# Agent skill is installed from the totalcms/cms package by `tcms skill:install`
+# (runs on composer install/update) — generated, core-owned, not tracked here.
+/.claude/skills/totalcms/

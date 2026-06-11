@@ -49,9 +49,11 @@ data, which may be stale or wrong about exact Twig signatures and field options.
 3. **Public docs site**: <https://docs.totalcms.co>
 4. **In-admin docs**: the running site serves the same docs under the admin
    panel (look for "Docs" in the admin navigation).
-5. **Agent skill (Claude Code).** A deeper, step-by-step build skill ships at
-   `.claude/skills/totalcms/`. Claude Code auto-loads it when your task matches
-   site-building. **Other agents (Codex, Cursor, etc.):** read
+5. **Agent skill (Claude Code).** A deeper, step-by-step build skill is installed
+   at `.claude/skills/totalcms/` by `vendor/bin/tcms skill:install` (run
+   automatically on `composer install`/`composer update`; run it by hand to
+   refresh). Claude Code auto-loads it when your task matches site-building.
+   **Other agents (Codex, Cursor, etc.):** read
    `.claude/skills/totalcms/SKILL.md` and its `references/` directly for the
    end-to-end build workflow — Site Builder, the CLI with `--json`, the frontend
    pipeline, and the data model.
