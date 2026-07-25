@@ -24,4 +24,12 @@ define('TCMS_PROJECT_ROOT', dirname(__DIR__));
 
 require TCMS_PROJECT_ROOT . '/vendor/autoload.php';
 
-(require \TotalCMS\Support\PathResolver::packageRoot() . '/config/bootstrap.php')->run();
+$app = require \TotalCMS\Support\PathResolver::packageRoot() . '/config/bootstrap.php';
+
+if ($app === false) {
+	// PHP built-in dev server: bootstrap flagged a static file — return false
+	// so the server serves it directly.
+	return false;
+}
+
+$app->run();
