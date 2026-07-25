@@ -1,6 +1,31 @@
 {
 	"name": "totalcms/totalcms",
-	"description": "Total CMS - A modern flat-file content management system",
+	"description": "Create a new Total CMS site — a modern flat-file CMS for PHP with no database, Twig templating, a REST API, and a Site Builder.",
+	"homepage": "https://totalcms.co",
+	"support": {
+		"docs": "https://docs.totalcms.co",
+		"email": "support@totalcms.co"
+	},
+	"authors": [
+		{
+			"name": "Joe Workman",
+			"homepage": "https://totalcms.co"
+		}
+	],
+	"keywords": [
+		"cms",
+		"flat-file",
+		"flat-file-cms",
+		"no-database",
+		"headless-cms",
+		"content-management",
+		"php-cms",
+		"twig",
+		"slim",
+		"json",
+		"total-cms",
+		"totalcms"
+	],
 	"type": "project",
 	"license": "proprietary",
 	"minimum-stability": "dev",
