@@ -74,7 +74,7 @@ See the [Configuration Guide](https://docs.totalcms.co/getting-started/configura
 
 This skeleton ships an [`AGENTS.md`](AGENTS.md) that orients AI coding assistants —
 the stack, project layout, the `tcms` CLI, conventions, and how to connect the
-Total CMS [MCP documentation server](https://mcp.totalcms.co/) so your assistant
+Total CMS [MCP documentation server](https://totalcms.co/mcp) so your assistant
 can look up exact Twig functions, field options, and API endpoints on demand.
 
 `AGENTS.md` is read by many tools out of the box, but if yours expects a

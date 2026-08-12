@@ -21,18 +21,21 @@ is stored as JSON files on disk. The CMS core is installed via Composer into
 Total CMS has thorough docs. Prefer looking things up over relying on training
 data, which may be stale or wrong about exact Twig signatures and field options.
 
-1. **MCP docs server (best for agents).** Total CMS publishes a public MCP
-   server at `https://mcp.totalcms.co/` that exposes the full documentation as
-   live lookup tools (`docs_search`, `docs_twig_function`, `docs_twig_filter`,
-   `docs_field_type`, `docs_schema_config`, `docs_api_endpoint`,
-   `docs_cli_command`, `docs_builder`, `docs_extension`). No API key required.
+1. **MCP docs server (best for agents).** Total CMS publishes an official docs
+   connector at `https://totalcms.co/mcp` — the Total CMS website's own MCP
+   server, exposing the full documentation as live tools: `docs_search(query)`
+   to find pages, `docs_get(path)` to read one in full, and
+   `docs_lookup(kind, name)` for exact reference entries (kinds:
+   `twig_function`, `twig_filter`, `field_type`, `api_endpoint`,
+   `schema_config`, `cli_command`, `extension_api`, `builder_api` — omit
+   `name` to list a kind). No API key or login required.
    If your tool supports MCP, connect it. Example for Claude Code (`~/.claude/mcp.json`):
 
    ```json
    {
      "mcpServers": {
        "totalcms-docs": {
-         "url": "https://mcp.totalcms.co/"
+         "url": "https://totalcms.co/mcp"
        }
      }
    }
